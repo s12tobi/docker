@@ -1,0 +1,756 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
+  <title>s13Unity - Réunion Familiale (Ouest Cameroun)</title>
+  <!-- Font Awesome 6 (free icons) -->
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+  <!-- Google Fonts: African vibe & readability -->
+  <link href="https://fonts.googleapis.com/css2?family=Inter:opsz,wght@14..32,300;14..32,400;14..32,500;14..32,600;14..32,700&family=Playfair+Display:wght@400;600;700&display=swap" rel="stylesheet">
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    body {
+      font-family: 'Inter', sans-serif;
+      background: #fef6e8;
+      background-image: radial-gradient(circle at 10% 20%, rgba(218, 165, 32, 0.03) 2%, transparent 2.5%),
+                        radial-gradient(circle at 80% 70%, rgba(139, 69, 19, 0.03) 1.5%, transparent 2%);
+      background-size: 40px 40px, 32px 32px;
+      color: #2c1a0e;
+    }
+
+    /* Tradition inspired palette : terre cuite, or, indigo */
+    :root {
+      --terracotta: #b35f2b;
+      --gold: #d4af37;
+      --indigo-deep: #2e3b3b;
+      --sand: #f3e5c9;
+      --bark: #5a3e2b;
+      --cream: #fff9ef;
+    }
+
+    .container {
+      max-width: 1400px;
+      margin: 0 auto;
+      padding: 1.5rem;
+    }
+
+    /* header & motif */
+    .header {
+      text-align: center;
+      margin-bottom: 2rem;
+      border-bottom: 3px solid var(--gold);
+      padding-bottom: 1rem;
+      position: relative;
+    }
+    .header h1 {
+      font-family: 'Playfair Display', serif;
+      font-size: 2.4rem;
+      color: var(--terracotta);
+      letter-spacing: -0.5px;
+    }
+    .header h1 i {
+      color: var(--gold);
+      margin-right: 8px;
+    }
+    .motto-carousel {
+      background: #fff0e0;
+      display: inline-block;
+      padding: 0.5rem 1.2rem;
+      border-radius: 60px;
+      margin-top: 0.75rem;
+      font-weight: 500;
+      font-size: 0.9rem;
+      color: #5a2d12;
+      box-shadow: 0 2px 6px rgba(0,0,0,0.05);
+      border-left: 5px solid var(--gold);
+    }
+    .motto-carousel i {
+      margin-right: 8px;
+      color: var(--gold);
+    }
+
+    /* stats cards */
+    .stats-grid {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 1rem;
+      justify-content: space-between;
+      margin-bottom: 2rem;
+    }
+    .stat-card {
+      background: white;
+      border-radius: 28px;
+      padding: 1rem 1.6rem;
+      flex: 1;
+      min-width: 120px;
+      text-align: center;
+      box-shadow: 0 8px 20px rgba(0,0,0,0.05);
+      border-bottom: 3px solid var(--gold);
+    }
+    .stat-number {
+      font-size: 2rem;
+      font-weight: 800;
+      color: var(--terracotta);
+    }
+
+    /* two column main layout */
+    .app-layout {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 1.8rem;
+    }
+    .family-sidebar {
+      flex: 1.2;
+      min-width: 240px;
+      background: var(--cream);
+      border-radius: 28px;
+      padding: 1.2rem;
+      box-shadow: 0 6px 14px rgba(0,0,0,0.05);
+      border: 1px solid #eeddbb;
+    }
+    .meetings-main {
+      flex: 3;
+      min-width: 280px;
+    }
+
+    /* cards */
+    .card {
+      background: white;
+      border-radius: 28px;
+      padding: 1.2rem;
+      margin-bottom: 1.2rem;
+      box-shadow: 0 4px 12px rgba(0,0,0,0.08);
+      transition: all 0.2s;
+      border-left: 6px solid var(--gold);
+    }
+    .meeting-card {
+      transition: 0.2s;
+    }
+    .meeting-card:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 12px 20px rgba(0,0,0,0.1);
+    }
+    .btn {
+      background: var(--terracotta);
+      border: none;
+      color: white;
+      padding: 8px 16px;
+      border-radius: 40px;
+      cursor: pointer;
+      font-weight: 500;
+      font-size: 0.85rem;
+      transition: 0.2s;
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+    }
+    .btn-gold {
+      background: var(--gold);
+      color: #2c1a0e;
+    }
+    .btn-outline {
+      background: transparent;
+      border: 1px solid var(--terracotta);
+      color: var(--terracotta);
+    }
+    .btn-sm {
+      padding: 5px 12px;
+      font-size: 0.75rem;
+    }
+    .btn-danger {
+      background: #b7472a;
+    }
+    .member-chip {
+      display: inline-flex;
+      align-items: center;
+      background: #f0e2ce;
+      padding: 6px 12px;
+      border-radius: 40px;
+      margin: 4px;
+      font-size: 0.8rem;
+    }
+    .member-chip i {
+      margin-right: 6px;
+      color: var(--terracotta);
+    }
+    .tradition-badge {
+      background: #fbebc6;
+      border-radius: 20px;
+      padding: 0.2rem 0.7rem;
+      font-size: 0.7rem;
+      font-weight: 500;
+    }
+    hr {
+      margin: 1rem 0;
+      border-color: #eeddbb;
+    }
+    .flex-between {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+    .modal {
+      display: none;
+      position: fixed;
+      top: 0; left: 0;
+      width: 100%; height: 100%;
+      background-color: rgba(0,0,0,0.7);
+      justify-content: center;
+      align-items: center;
+      z-index: 1000;
+      overflow-y: auto;
+    }
+    .modal-content {
+      background: #fffaf2;
+      max-width: 800px;
+      width: 90%;
+      max-height: 85vh;
+      overflow-y: auto;
+      border-radius: 32px;
+      padding: 1.5rem;
+      position: relative;
+      margin: 2rem auto;
+      border-top: 8px solid var(--gold);
+    }
+    .close-modal {
+      position: absolute;
+      right: 1.5rem;
+      top: 1rem;
+      font-size: 1.8rem;
+      cursor: pointer;
+      color: var(--terracotta);
+    }
+    input, textarea, select {
+      width: 100%;
+      padding: 10px;
+      border-radius: 24px;
+      border: 1px solid #dcb985;
+      background: white;
+      font-family: inherit;
+      margin-top: 5px;
+      margin-bottom: 12px;
+    }
+    label {
+      font-weight: 600;
+      font-size: 0.85rem;
+    }
+    .grid-2 {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 12px;
+    }
+    .contrib-row, .task-row {
+      background: #f9efdf;
+      padding: 8px;
+      border-radius: 20px;
+      margin-bottom: 8px;
+      display: flex;
+      flex-wrap: wrap;
+      align-items: center;
+      justify-content: space-between;
+    }
+    .icon-text {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+    @media (max-width: 760px) {
+      .app-layout { flex-direction: column; }
+      .stats-grid { flex-direction: column; }
+    }
+    .footer-note {
+      text-align: center;
+      margin-top: 2rem;
+      font-size: 0.75rem;
+      color: #8b6946;
+    }
+  </style>
+</head>
+<body>
+<div class="container">
+  <div class="header">
+    <h1><i class="fas fa-handshake"></i> 12Unity · Nkwa Fam<span style="font-size: 1rem;"> (Ouest Cameroun)</span></h1>
+    <div class="motto-carousel" id="mottoDisplay">
+      <i class="fas fa-leaf"></i> <span id="mottoText">"Le léopard ne cache pas ses griffes" - Proverbe Bamiléké</span>
+    </div>
+  </div>
+
+  <div class="stats-grid" id="statsContainer">
+    <!-- dynamic stats -->
+  </div>
+
+  <div class="app-layout">
+    <!-- Sidebar : Membres & Traditions -->
+    <div class="family-sidebar">
+      <div class="flex-between">
+        <h3><i class="fas fa-users"></i> Ndab (Famille)</h3>
+        <button class="btn btn-sm btn-gold" id="addMemberBtn"><i class="fas fa-plus"></i> Ajouter</button>
+      </div>
+      <div id="memberList" style="margin-top: 15px; max-height: 240px; overflow-y: auto;"></div>
+      <hr>
+      <h4><i class="fas fa-drumstick-bite"></i> Traditions Ouest</h4>
+      <div style="font-size: 0.75rem; margin-top: 8px;">
+        <span class="tradition-badge"><i class="fas fa-seedling"></i> Casse de noix de kola</span>
+        <span class="tradition-badge"><i class="fas fa-comments"></i> Parole tournante</span>
+        <span class="tradition-badge"><i class="fas fa-wine-bottle"></i> Vin de palme</span>
+        <span class="tradition-badge"><i class="fas fa-hands-praying"></i> Hommage aux ancêtres</span>
+        <span class="tradition-badge"><i class="fas fa-hand-holding-heart"></i> Consensus</span>
+      </div>
+      <p class="icon-text" style="margin-top: 14px; font-size:0.8rem"><i class="fas fa-quote-right"></i> "La case familiale est un patrimoine sacré"</p>
+    </div>
+
+    <!-- Main : Réunions -->
+    <div class="meetings-main">
+      <div class="flex-between">
+        <h2><i class="fas fa-calendar-alt"></i> Réunions familiales</h2>
+        <button class="btn" id="createMeetingBtn"><i class="fas fa-plus-circle"></i> Nouvelle réunion</button>
+      </div>
+      <div id="meetingsListContainer" style="margin-top: 1rem;"></div>
+    </div>
+  </div>
+  <div class="footer-note">
+    <i class="fas fa-chart-line"></i> Suivi des contributions, tâches et rituels - Style Ouest Cameroun (Royaume bamiléké)
+  </div>
+</div>
+
+<!-- MODAL pour réunion / gestion détaillée -->
+<div id="meetingModal" class="modal">
+  <div class="modal-content">
+    <span class="close-modal" id="closeModalBtn">&times;</span>
+    <h3 id="modalTitle"><i class="fas fa-gavel"></i> Détails & traditions</h3>
+    <form id="meetingForm">
+      <input type="hidden" id="meetingId" value="">
+      <div class="grid-2">
+        <div><label>Titre réunion *</label><input type="text" id="meetTitle" required></div>
+        <div><label>Date</label><input type="date" id="meetDate"></div>
+        <div><label>Lieu (chefferie / domicile)</label><input type="text" id="meetLocation" placeholder="Carrefour familial"></div>
+        <div><label>Ordre du jour</label><input type="text" id="meetAgenda" placeholder="Kola, finances, dot..."></div>
+      </div>
+      <label>Décisions / résolutions</label>
+      <textarea id="meetDecisions" rows="2" placeholder="Consensus atteint..."></textarea>
+
+      <!-- Participation -->
+      <label><i class="fas fa-user-check"></i> Présences (famille Ndab)</label>
+      <div id="attendanceChecklist" style="max-height: 120px; overflow-y: auto; background:#fdf7ed; border-radius: 20px; padding: 8px; margin-bottom: 12px;"></div>
+
+      <!-- Contributions -->
+      <label><i class="fas fa-coins"></i> Cotisations / Contributions</label>
+      <div id="contributionsContainer"></div>
+      <button type="button" id="addContributionBtn" class="btn btn-sm btn-outline" style="margin-bottom: 12px;"><i class="fas fa-plus"></i> Ajouter une contribution</button>
+
+      <!-- Tâches / Actions -->
+      <label><i class="fas fa-tasks"></i> Actions & suivi (Suivi des responsables)</label>
+      <div id="tasksContainer"></div>
+      <button type="button" id="addTaskBtn" class="btn btn-sm btn-outline" style="margin-bottom: 12px;"><i class="fas fa-plus"></i> Ajouter une tâche</button>
+
+      <!-- Traditions Ouest Cameroun -->
+      <label><i class="fas fa-dharmachakra"></i> Rituels & traditions observés</label>
+      <div id="traditionsChecklist"></div>
+
+      <div style="display: flex; gap: 12px; justify-content: flex-end; margin-top: 20px;">
+        <button type="button" class="btn btn-outline" id="deleteMeetingBtn">Supprimer réunion</button>
+        <button type="submit" class="btn">Enregistrer & Suivi</button>
+      </div>
+    </form>
+  </div>
+</div>
+
+<script>
+  // ---------- DATA MODELS ----------
+  let familyMembers = [];   // {id, name, role}
+  let meetings = [];        // {id, title, date, location, agenda, decisions, attendees: {memberId: bool}, contributions: [], tasks: [], traditions: {}}
+  // traditions predef list
+  const traditionsList = [
+    "Casse de kola (honneur aux aînés)", "Vin de palme partagé", "Parole tournante (pas d'interruption)",
+    "Hommage aux ancêtres", "Décision par consensus (sans vote majoritaire)"
+  ];
+
+  // Helper
+  function saveToLocalStorage() {
+    localStorage.setItem('familyMeetings_app', JSON.stringify({ familyMembers, meetings }));
+  }
+  function loadFromLocalStorage() {
+    const data = localStorage.getItem('familyMeetings_app');
+    if (data) {
+      const parsed = JSON.parse(data);
+      familyMembers = parsed.familyMembers || [];
+      meetings = parsed.meetings || [];
+    }
+    if (!familyMembers.length) {
+      // données initiales authentiques Ouest Cameroun
+      familyMembers = [
+        { id: "m1", name: "Papa Joseph (Chef de famille)", role: "Tâfon" },
+        { id: "m2", name: "Maman Rose (Reine mère)", role: "Matriarche" },
+        { id: "m3", name: "Tonton Jacques (Notable)", role: "Conseiller" },
+        { id: "m4", name: "Tante Cécile", role: "Trésorière" },
+        { id: "m5", name: "Cousin Paul", role: "Secrétaire" },
+        { id: "m6", name: "Soeur Judith", role: "Jeunesse" },
+      ];
+    }
+    if (!meetings.length) {
+      const now = new Date().toISOString().slice(0,10);
+      meetings = [
+        {
+          id: "meet1",
+          title: "Assemblée des Saisons (Récoltes)",
+          date: "2026-07-15",
+          location: "Carrefour de Foto",
+          agenda: "Préparatifs funérailles, cotisation école neveux",
+          decisions: "Création d'une caisse d'entraide solidaire",
+          attendees: { m1: true, m2: true, m3: true, m4: false, m5: true, m6: true },
+          contributions: [
+            { id: "c1", contributorId: "m1", amount: 25000, description: "Caisse école" },
+            { id: "c2", contributorId: "m3", amount: 15000, description: "Soutien funérailles" }
+          ],
+          tasks: [
+            { id: "t1", description: "Acheter 10 litres vin de palme", assigneeId: "m5", status: "en cours" },
+            { id: "t2", description: "Contacter les notables pour la date", assigneeId: "m3", status: "à faire" }
+          ],
+          traditions: { 0: true, 1: false, 2: true, 3: true, 4: false }
+        },
+        {
+          id: "meet2",
+          title: "Réunion dot & mariage (Nkwen)",
+          date: "2026-08-05",
+          location: "Chefferie Bandjoun",
+          agenda: "Organisation dot de la cousine",
+          decisions: "Collecte de 300k FCFA pour la dot",
+          attendees: { m1: true, m2: true, m3: true, m4: true, m5: false, m6: true },
+          contributions: [
+            { id: "c3", contributorId: "m2", amount: 50000, description: "Participation dot" }
+          ],
+          tasks: [
+            { id: "t3", description: "Préparer la liste des cadeaux traditionnels", assigneeId: "m4", status: "à faire" }
+          ],
+          traditions: { 0: true, 1: true, 2: true, 3: true, 4: true }
+        }
+      ];
+    }
+    // ensure every meeting has contributions & tasks arrays
+    meetings.forEach(meet => {
+      if (!meet.contributions) meet.contributions = [];
+      if (!meet.tasks) meet.tasks = [];
+      if (!meet.attendees) meet.attendees = {};
+      if (!meet.traditions) {
+        let tradObj = {};
+        traditionsList.forEach((_, idx) => tradObj[idx] = false);
+        meet.traditions = tradObj;
+      }
+    });
+  }
+
+  // ----- Render Functions -----
+  function renderAll() {
+    renderStats();
+    renderFamilyMembersList();
+    renderMeetingsList();
+  }
+
+  function renderStats() {
+    const totalMeetings = meetings.length;
+    let totalContributions = 0;
+    let totalTasks = 0;
+    meetings.forEach(m => {
+      if (m.contributions) m.contributions.forEach(c => totalContributions += (c.amount || 0));
+      if (m.tasks) totalTasks += m.tasks.length;
+    });
+    const totalMembers = familyMembers.length;
+    document.getElementById('statsContainer').innerHTML = `
+      <div class="stat-card"><div class="stat-number">${totalMeetings}</div><div>Réunions</div><i class="fas fa-calendar-week"></i></div>
+      <div class="stat-card"><div class="stat-number">${totalContributions.toLocaleString()} CFA</div><div>Cotisations totales</div><i class="fas fa-hand-holding-usd"></i></div>
+      <div class="stat-card"><div class="stat-number">${totalTasks}</div><div>Tâches à suivre</div><i class="fas fa-clipboard-list"></i></div>
+      <div class="stat-card"><div class="stat-number">${totalMembers}</div><div>Membres actifs</div><i class="fas fa-user-friends"></i></div>
+    `;
+  }
+
+  function renderFamilyMembersList() {
+    const container = document.getElementById('memberList');
+    container.innerHTML = familyMembers.map(m => `
+      <div class="member-chip"><i class="fas fa-user-circle"></i> ${m.name} <span style="font-size:0.7rem; background:#e8d5b5; border-radius:12px; padding:2px 6px; margin-left:6px;">${m.role}</span>
+      <i class="fas fa-trash-alt" style="margin-left:8px; cursor:pointer; color:#b7472a;" onclick="removeMember('${m.id}')"></i></div>
+    `).join('');
+    if (!familyMembers.length) container.innerHTML = '<p>Aucun membre, ajoutez des proches</p>';
+  }
+
+  function renderMeetingsList() {
+    const container = document.getElementById('meetingsListContainer');
+    if (!meetings.length) {
+      container.innerHTML = '<div class="card">Aucune réunion. Créez la première assemblée familiale ✨</div>';
+      return;
+    }
+    container.innerHTML = meetings.map(meet => {
+      const attendeeCount = Object.values(meet.attendees || {}).filter(v => v === true).length;
+      const totalTasks = (meet.tasks || []).length;
+      const doneTasks = (meet.tasks || []).filter(t => t.status === "terminée").length;
+      return `
+        <div class="card meeting-card">
+          <div class="flex-between">
+            <h3><i class="fas fa-handshake"></i> ${escapeHtml(meet.title)}</h3>
+            <span class="tradition-badge"><i class="fas fa-calendar"></i> ${meet.date || 'Date flexible'}</span>
+          </div>
+          <div class="icon-text"><i class="fas fa-location-dot"></i> ${meet.location || "Non précisé"} &nbsp;| <i class="fas fa-users"></i> ${attendeeCount}/${familyMembers.length} présents</div>
+          <div class="icon-text"><i class="fas fa-tasks"></i> Tâches: ${doneTasks}/${totalTasks} réalisées &nbsp; <i class="fas fa-coins"></i> Cotisations: ${(meet.contributions || []).reduce((s,c)=>s+(c.amount||0),0).toLocaleString()} CFA</div>
+          <div style="margin-top: 12px;">
+            <button class="btn btn-sm btn-gold" onclick="openMeetingModal('${meet.id}')"><i class="fas fa-chart-simple"></i> Suivi traditions & détails</button>
+            <button class="btn btn-sm btn-outline" onclick="deleteMeetingById('${meet.id}')"><i class="fas fa-trash"></i> Supprimer</button>
+          </div>
+        </div>
+      `;
+    }).join('');
+  }
+
+  // Helper add/remove member
+  window.removeMember = (id) => {
+    if (confirm("Supprimer ce membre ?")) {
+      familyMembers = familyMembers.filter(m => m.id !== id);
+      // also remove from meeting attendees
+      meetings.forEach(m => { if(m.attendees && m.attendees[id]) delete m.attendees[id]; });
+      saveToLocalStorage();
+      renderAll();
+    }
+  };
+
+  function deleteMeetingById(id) {
+    if(confirm("Supprimer définitivement cette réunion familiale ?")) {
+      meetings = meetings.filter(m => m.id !== id);
+      saveToLocalStorage();
+      renderAll();
+    }
+  }
+
+  function openMeetingModal(meetingId = null) {
+    const modal = document.getElementById('meetingModal');
+    const isNew = !meetingId;
+    let meeting = null;
+    if (!isNew) meeting = meetings.find(m => m.id === meetingId);
+    else {
+      meeting = {
+        id: Date.now().toString(),
+        title: "", date: new Date().toISOString().slice(0,10), location: "", agenda: "", decisions: "",
+        attendees: {}, contributions: [], tasks: [], traditions: {}
+      };
+      traditionsList.forEach((_, idx) => meeting.traditions[idx] = false);
+      familyMembers.forEach(m => { meeting.attendees[m.id] = false; });
+    }
+    document.getElementById('meetingId').value = meeting.id;
+    document.getElementById('meetTitle').value = meeting.title || "";
+    document.getElementById('meetDate').value = meeting.date || "";
+    document.getElementById('meetLocation').value = meeting.location || "";
+    document.getElementById('meetAgenda').value = meeting.agenda || "";
+    document.getElementById('meetDecisions').value = meeting.decisions || "";
+    renderAttendanceChecklist(meeting.attendees);
+    renderContributionsList(meeting.contributions, meeting.id);
+    renderTasksList(meeting.tasks, meeting.id);
+    renderTraditionsChecklist(meeting.traditions);
+    window.currentMeetingEditId = meeting.id;
+    modal.style.display = 'flex';
+  }
+
+  function renderAttendanceChecklist(attendeesObj) {
+    const div = document.getElementById('attendanceChecklist');
+    div.innerHTML = familyMembers.map(m => `
+      <label style="display:block; margin:6px 0;"><input type="checkbox" class="attendance-check" data-member="${m.id}" ${attendeesObj[m.id] ? 'checked' : ''}> ${m.name} (${m.role})</label>
+    `).join('');
+  }
+
+  function renderContributionsList(contributions, meetingId) {
+    const container = document.getElementById('contributionsContainer');
+    if (!contributions.length) {
+      container.innerHTML = '<div style="font-style:italic;">Aucune cotisation enregistrée</div>';
+    } else {
+      container.innerHTML = contributions.map((c, idx) => `
+        <div class="contrib-row" data-cindex="${idx}">
+          <span><strong>${getMemberName(c.contributorId)}</strong> : ${c.amount} CFA (${c.description})</span>
+          <button type="button" class="btn-sm btn-danger" onclick="removeContributionTmp('${meetingId}', '${c.id}')"><i class="fas fa-trash"></i></button>
+        </div>
+      `).join('');
+    }
+  }
+
+  function renderTasksList(tasks, meetingId) {
+    const container = document.getElementById('tasksContainer');
+    if (!tasks.length) container.innerHTML = '<div>Aucune action assignée</div>';
+    else {
+      container.innerHTML = tasks.map((t, idx) => `
+        <div class="task-row" data-tidx="${idx}">
+          <span><i class="fas fa-user-check"></i> ${t.description} → <strong>${getMemberName(t.assigneeId)}</strong> [${t.status}]</span>
+          <button type="button" class="btn-sm btn-danger" onclick="removeTaskTmp('${meetingId}', '${t.id}')"><i class="fas fa-trash-alt"></i></button>
+        </div>
+      `).join('');
+    }
+  }
+
+  function renderTraditionsChecklist(traditionsObj) {
+    const container = document.getElementById('traditionsChecklist');
+    container.innerHTML = traditionsList.map((trad, idx) => `
+      <label style="display:block; margin:5px 0;"><input type="checkbox" class="trad-check" data-tradidx="${idx}" ${traditionsObj[idx] ? 'checked' : ''}> ${trad}</label>
+    `).join('');
+  }
+
+  // get member name helper
+  function getMemberName(memberId) {
+    const m = familyMembers.find(mem => mem.id === memberId);
+    return m ? m.name : "Membre inconnu";
+  }
+
+  window.removeContributionTmp = (meetingId, contribId) => {
+    const meeting = meetings.find(m => m.id === meetingId);
+    if (meeting) {
+      meeting.contributions = meeting.contributions.filter(c => c.id !== contribId);
+      saveToLocalStorage();
+      if (document.getElementById('meetingId').value === meetingId) {
+        renderContributionsList(meeting.contributions, meetingId);
+      }
+      renderAll();
+    }
+  };
+  window.removeTaskTmp = (meetingId, taskId) => {
+    const meeting = meetings.find(m => m.id === meetingId);
+    if (meeting) {
+      meeting.tasks = meeting.tasks.filter(t => t.id !== taskId);
+      saveToLocalStorage();
+      if (document.getElementById('meetingId').value === meetingId) {
+        renderTasksList(meeting.tasks, meetingId);
+      }
+      renderAll();
+    }
+  };
+
+  // Add contribution/task temp inside modal
+  document.getElementById('addContributionBtn').onclick = () => {
+    const meetingId = document.getElementById('meetingId').value;
+    const meeting = meetings.find(m => m.id === meetingId);
+    if (!meeting) return;
+    const memberSelect = prompt("ID membre? (tapez le nom ou utilisez ID) - mieux: entrez le nom du membre existant:\nListe: " + familyMembers.map(m=>m.name).join(', '));
+    if (!memberSelect) return;
+    const foundMember = familyMembers.find(m => m.name.toLowerCase().includes(memberSelect.toLowerCase())) || familyMembers[0];
+    if (!foundMember) { alert("Membre non trouvé"); return; }
+    const amount = prompt("Montant (FCFA):", "5000");
+    if (!amount) return;
+    const desc = prompt("Description (ex: cotisation réunion):", "Soutien famille");
+    const newContrib = {
+      id: Date.now() + "-" + Math.random(),
+      contributorId: foundMember.id,
+      amount: parseInt(amount),
+      description: desc
+    };
+    meeting.contributions.push(newContrib);
+    saveToLocalStorage();
+    renderContributionsList(meeting.contributions, meetingId);
+    renderAll();
+  };
+  document.getElementById('addTaskBtn').onclick = () => {
+    const meetingId = document.getElementById('meetingId').value;
+    const meeting = meetings.find(m => m.id === meetingId);
+    if (!meeting) return;
+    const taskDesc = prompt("Description de la tâche (ex: 'Préparer vin de palme')");
+    if (!taskDesc) return;
+    const assigneeName = prompt("Assigner à (nom du membre):\n" + familyMembers.map(m=>m.name).join(", "));
+    let assignee = familyMembers.find(m => m.name.toLowerCase().includes(assigneeName.toLowerCase()));
+    if (!assignee && familyMembers.length) assignee = familyMembers[0];
+    if (!assignee) { alert("Membre invalide"); return; }
+    const newTask = {
+      id: Date.now() + "-task",
+      description: taskDesc,
+      assigneeId: assignee.id,
+      status: "en cours"
+    };
+    meeting.tasks.push(newTask);
+    saveToLocalStorage();
+    renderTasksList(meeting.tasks, meetingId);
+    renderAll();
+  };
+
+  // Save meeting form
+  document.getElementById('meetingForm').addEventListener('submit', (e) => {
+    e.preventDefault();
+    const meetingId = document.getElementById('meetingId').value;
+    let meeting = meetings.find(m => m.id === meetingId);
+    const isNew = !meeting;
+    if (!meeting) {
+      meeting = {
+        id: meetingId,
+        contributions: [],
+        tasks: [],
+        attendees: {},
+        traditions: {}
+      };
+      meetings.push(meeting);
+    }
+    meeting.title = document.getElementById('meetTitle').value;
+    meeting.date = document.getElementById('meetDate').value;
+    meeting.location = document.getElementById('meetLocation').value;
+    meeting.agenda = document.getElementById('meetAgenda').value;
+    meeting.decisions = document.getElementById('meetDecisions').value;
+    // attendees from checkboxes
+    const checkboxes = document.querySelectorAll('.attendance-check');
+    const newAttendees = {};
+    checkboxes.forEach(cb => {
+      const memberId = cb.getAttribute('data-member');
+      newAttendees[memberId] = cb.checked;
+    });
+    meeting.attendees = newAttendees;
+    // traditions checklist
+    const tradChecks = document.querySelectorAll('.trad-check');
+    const newTraditions = {};
+    tradChecks.forEach(tc => {
+      const idx = parseInt(tc.getAttribute('data-tradidx'));
+      newTraditions[idx] = tc.checked;
+    });
+    meeting.traditions = newTraditions;
+    // contributions & tasks already synced via references (same array)
+    saveToLocalStorage();
+    renderAll();
+    document.getElementById('meetingModal').style.display = 'none';
+  });
+
+  document.getElementById('deleteMeetingBtn').onclick = () => {
+    const mid = document.getElementById('meetingId').value;
+    if (mid && confirm("Supprimer cette réunion ?")) {
+      meetings = meetings.filter(m => m.id !== mid);
+      saveToLocalStorage();
+      renderAll();
+      document.getElementById('meetingModal').style.display = 'none';
+    }
+  };
+  document.getElementById('closeModalBtn').onclick = () => document.getElementById('meetingModal').style.display = 'none';
+  window.onclick = (e) => { if (e.target === document.getElementById('meetingModal')) document.getElementById('meetingModal').style.display = 'none'; };
+
+  document.getElementById('createMeetingBtn').onclick = () => openMeetingModal(null);
+  document.getElementById('addMemberBtn').onclick = () => {
+    let name = prompt("Nom du membre (ex: Tonton Martin)");
+    if (name) {
+      let role = prompt("Rôle (Chef, Notable, Trésorier, etc)", "Membre famille");
+      familyMembers.push({ id: Date.now().toString(), name: name, role: role || "Membre" });
+      saveToLocalStorage();
+      renderAll();
+    }
+  };
+  // Mottos / rotating proverbs
+  const mottos = [
+    "Chaque tête est une sagesse - Proverbe Bamiléké",
+    "L'union de la famille traverse les montagnes",
+    "Le kola unit les cœurs, l'entraide construit le village",
+    "Le pilier ne se plaint jamais du poids (Ouest Cameroun)",
+    "Ubuntu: Je suis car nous sommes",
+    "Mbou (famille) avant tout - Tradition du Ngwas"
+  ];
+  let mottoIndex = 0;
+  function rotateMotto() {
+    document.getElementById('mottoText').innerText = mottos[mottoIndex % mottos.length];
+    mottoIndex++;
+  }
+  rotateMotto();
+  setInterval(rotateMotto, 6000);
+  function escapeHtml(str) { if(!str) return ''; return str.replace(/[&<>]/g, function(m){if(m==='&') return '&amp;'; if(m==='<') return '&lt;'; if(m==='>') return '&gt;'; return m;});}
+  loadFromLocalStorage();
+  renderAll();
+</script>
+</body>
+</html>
