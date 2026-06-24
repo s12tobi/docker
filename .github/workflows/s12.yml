@@ -1,0 +1,50 @@
+name: Docker Build and Push Pipeline
+
+on:
+  push:
+    branches: [ main, master ]
+  workflow_dispatch:
+
+jobs:
+  build-and-push:
+    runs-on: s12
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Install Docker if needed
+        run: |
+          if ! command -v docker &> /dev/null; then
+            curl -fsSL https://get.docker.com | sudo sh
+            sudo usermod -aG docker $USER
+          else
+            docker --version
+          fi
+
+      - name: Allow Docker socket access
+        run: sudo chmod 666 /var/run/docker.sock
+
+      - name: Build Docker image
+        run: docker build -t s12tobi/new:s1 .
+
+      - name: Verify built image
+        run: docker images | grep "s12tobi/new"
+
+      - name: Remove old container if it exists
+        run: docker rm -f s2-new || true
+
+      - name: Run container with port mapping
+        run: docker run -d -p 8080:80 --name s2-new s12tobi/new:s1
+
+      - name: List running containers
+        run: docker ps
+
+      - name: Login to Docker Hub
+        uses: docker/login-action@v3
+        with:
+          username: s12tobi
+          password: ${{ secrets.DOCKERHUB_TOKEN }}
+
+      - name: Push image to Docker Hub
+        run: docker push s12tobi/new:s1
